@@ -49,11 +49,11 @@ type Week struct {
 // GitHub groups commits, additions and deletions by "week beginning".
 func (c Client) ListContributorStats(ctx context.Context, repoOwner, repoName string) (*[]ContributorStats, error) {
 	h := http.Client{}
-	repoURL := fmt.Sprintf("%s/repos/%s/%s/stats/contributors", c.BaseURL, repoOwner, repoName)
+	csURL := fmt.Sprintf("%s/repos/%s/%s/stats/contributors", c.BaseURL, repoOwner, repoName)
 
-	req, err := http.NewRequest(http.MethodGet, repoURL, nil)
+	req, err := http.NewRequest(http.MethodGet, csURL, nil)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "[ListContributorStats] error creating request for url: %s", csURL)
 	}
 
 	// overkill for this but good habit
@@ -64,15 +64,15 @@ func (c Client) ListContributorStats(ctx context.Context, repoOwner, repoName st
 
 	resp, err := h.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "[ListContributorStats] error sending request")
 	}
 
 	if resp.StatusCode == http.StatusAccepted {
-		return nil, fmt.Errorf("[GitHub Error] GitHub sent a 202, meaning they don't have those stats ready. Try again in a minute")
+		return nil, errors.New("[ListContributorStats] [GitHub Error] GitHub sent a 202, meaning they don't have those stats ready. Try again in a minute")
 	}
 	// TODO: what about redirects?
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("[GitHub Error] Did not get successful response from github. Received %d", resp.StatusCode)
+		return nil, errors.Errorf("[ListContributorStats] [GitHub Error] Did not get successful response from github. Received %d", resp.StatusCode)
 	}
 
 	defer resp.Body.Close()
@@ -81,7 +81,7 @@ func (c Client) ListContributorStats(ctx context.Context, repoOwner, repoName st
 	var res []ContributorStats
 	err = dec.Decode(&res)
 	// don't really need to check err here since the next statement would return it anyway
-	// but generally a good habit.
+	// but generally a good habit. (NB: if err nil errors.Wrap returns nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "[ListContributorStats] Error unmarshalling result from GitHub")
 	}

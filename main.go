@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -23,14 +24,14 @@ const (
 func main() {
 	raw, err := parseInput()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Print(err) // would log.Fatal but want usage after error
 		flag.Usage()
 		os.Exit(1)
 	}
 
 	inputs, err := processInput(raw)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Print(err)
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -40,6 +41,7 @@ func main() {
 
 	gcs, err := ghClient.ListContributorStats(context.Background(), inputs.Owner, inputs.Repo)
 	if err != nil {
+		// usage probably not helpful if they make it this far..
 		log.Fatal(err.Error())
 	}
 
@@ -109,13 +111,13 @@ func parseInput() (rawInputs, error) {
 
 	if flag.NArg() > 1 {
 		// because flag.Parse() cant find flags after the args...
-		return rawInputs{}, fmt.Errorf("[checkFlags] only one argument expected and all flags should be specified before repository argument")
+		return rawInputs{}, errors.New("[checkFlags] only one argument expected and all flags should be specified before repository argument")
 	}
 
 	repo := flag.Arg(0)
 
 	if repo == "" {
-		return rawInputs{}, fmt.Errorf("[checkFlags] repository must be specified")
+		return rawInputs{}, errors.New("[checkFlags] repository must be specified")
 	}
 
 	return rawInputs{
@@ -140,12 +142,12 @@ type processedInputs struct {
 // splitting this out makes testing easier
 func processInput(p rawInputs) (processedInputs, error) {
 	if (p.From != "" || p.To != "") && (p.Weeks != 0 || p.Months != 0 || p.Years != 0) {
-		return processedInputs{}, fmt.Errorf("[processInput] invalid combination of date range arguments")
+		return processedInputs{}, errors.New("[processInput] invalid combination of date range arguments")
 	}
 
 	rs := strings.Split(p.Repo, "/")
 	if len(rs) != 2 {
-		return processedInputs{}, fmt.Errorf("[processInput] invalid argument. repo should be given in the form <owner>/<repo>")
+		return processedInputs{}, errors.New("[processInput] invalid argument. repo should be given in the form <owner>/<repo>")
 	}
 	repoOwner, repoName := rs[0], rs[1]
 
@@ -155,7 +157,7 @@ func processInput(p rawInputs) (processedInputs, error) {
 		var err error // delaration required here so that `from` on next line refers to var in parent scope
 		from, err = time.Parse("2006-01-02", p.From)
 		if err != nil {
-			return processedInputs{}, fmt.Errorf("[processInput] invalid `from` value provided. Format: YYYY-MM-DD")
+			return processedInputs{}, errors.New("[processInput] invalid `from` value provided. Format: YYYY-MM-DD")
 		}
 	}
 
@@ -163,7 +165,7 @@ func processInput(p rawInputs) (processedInputs, error) {
 		var err error // so `to` on next line` refers to var in parent scope
 		to, err = time.Parse("2006-01-02", p.To)
 		if err != nil {
-			return processedInputs{}, fmt.Errorf("[processInput] invalid `to` value provided. Format: YYYY-MM-DD")
+			return processedInputs{}, errors.New("[processInput] invalid `to` value provided. Format: YYYY-MM-DD")
 		}
 	}
 

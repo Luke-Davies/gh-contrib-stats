@@ -122,7 +122,7 @@ func TestListContributorStats(t *testing.T) {
 			RespHeader:  http.StatusAccepted,
 			RepoOwner:   "repo-owner",
 			RepoName:    "repo-name",
-			ExpectError: fmt.Errorf("[GitHub Error] GitHub sent a 202, meaning they don't have those stats ready. Try again in a minute"),
+			ExpectError: fmt.Errorf("[ListContributorStats] [GitHub Error] GitHub sent a 202, meaning they don't have those stats ready. Try again in a minute"),
 		},
 		{
 			Name:        "GitHub 404",
@@ -130,7 +130,7 @@ func TestListContributorStats(t *testing.T) {
 			RespHeader:  http.StatusNotFound,
 			RepoOwner:   "repo-owner",
 			RepoName:    "repo-name",
-			ExpectError: fmt.Errorf("[GitHub Error] Did not get successful response from github. Received 404"),
+			ExpectError: fmt.Errorf("[ListContributorStats] [GitHub Error] Did not get successful response from github. Received 404"),
 		},
 		{
 			Name:        "Bad Data",
@@ -165,7 +165,7 @@ func TestListContributorStats(t *testing.T) {
 				if err == nil {
 					t.Fatal("Expected error but received nil")
 				}
-				if !strings.Contains(err.Error(), tc.ExpectError.Error()) {
+				if !strings.HasPrefix(err.Error(), tc.ExpectError.Error()) {
 					t.Errorf("github.ListContributorStats:\n\nhave error:\n%+v\n\nwant error that starts with:\n%+v", err.Error(), tc.ExpectError.Error())
 				}
 			}

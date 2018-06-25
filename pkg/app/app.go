@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/luke-davies/gh-contrib-stats/pkg/github"
+	"github.com/pkg/errors"
 )
 
 // Contributor is our apps model of a contributor
@@ -80,10 +81,12 @@ func NormaliseCalcContributionsOpts(options CalcContrbutionsOpts) CalcContrbutio
 // ValidateCalcContributionsOpts vaidates the given options.
 // Returns an error if invalid. Silence is golden.
 func ValidateCalcContributionsOpts(options CalcContrbutionsOpts) error {
-	if options.From.Equal(options.To) || options.From.After(options.To) || options.From.After(time.Now()) || options.To.After(time.Now()) {
-		return fmt.Errorf(
-			"invalid date range given. " +
+	if options.From.Equal(options.To) || options.From.After(options.To) ||
+		options.From.After(time.Now()) || options.To.After(time.Now()) {
+		return errors.Errorf(
+			"[ValidateCalcContributionsOpts] invalid date range given: from %s to %s. "+
 				"`from` date must be before `to` date and neither `from` or `to` can be in the future",
+			options.To, options.From,
 		)
 	}
 	return nil
