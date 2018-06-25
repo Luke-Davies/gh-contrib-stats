@@ -19,7 +19,7 @@ This means what it says. Try again in a minute. GitHub needs time to calculate t
 
 ## Examples
 ```
-# get all contributors stats:
+# get all contributors stats for golang/go:
 gh-contrib-stats golang/go
 
 # get all contributors stats from a given date to today:
