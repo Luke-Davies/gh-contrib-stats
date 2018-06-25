@@ -209,36 +209,36 @@ func TestProcessInput(t *testing.T) {
 			res, err := processInput(tc.Input)
 
 			if err != nil && tc.ExpectErr == nil {
-				t.Fatalf("Unexpected Error: %s", err.Error())
+				t.Fatalf("processInput: Unexpected Error: %s", err.Error())
 			}
 
 			if tc.ExpectErr != nil {
 				if err == nil {
-					t.Fatal("Expected error but received nil")
+					t.Fatal("processInput: Expected error but received nil")
 				}
 				if err.Error() != tc.ExpectErr.Error() {
-					t.Fatalf("Have `err`: %s want:%s", err.Error(), tc.ExpectErr.Error())
+					t.Fatalf("processInput: Have `err`: %s want:%s", err.Error(), tc.ExpectErr.Error())
 				}
 			}
 
 			if res.Owner != tc.ExpectRes.Owner {
-				t.Fatalf("Have `Owner`: %s want:%s", res.Owner, tc.ExpectRes.Owner)
+				t.Fatalf("processInput: Have `Owner`: %s want:%s", res.Owner, tc.ExpectRes.Owner)
 			}
 
 			if res.Repo != tc.ExpectRes.Repo {
-				t.Fatalf("Have `Repo`: %s want:%s", res.Repo, tc.ExpectRes.Repo)
+				t.Fatalf("processInput: Have `Repo`: %s want:%s", res.Repo, tc.ExpectRes.Repo)
 			}
 
 			if res.From.Format("2006-01-02") != tc.ExpectRes.From.Format("2006-01-02") {
-				t.Fatalf("Have `From`: %s want:%s", res.From.Format("2006-01-02"), tc.ExpectRes.From.Format("2006-01-02"))
+				t.Fatalf("processInput: Have `From`: %s want:%s", res.From.Format("2006-01-02"), tc.ExpectRes.From.Format("2006-01-02"))
 			}
 
 			if res.To.Format("2006-01-02") != tc.ExpectRes.To.Format("2006-01-02") {
-				t.Fatalf("Have `To`: %s want:%s", res.To.Format("2006-01-02"), tc.ExpectRes.To.Format("2006-01-02"))
+				t.Fatalf("processInput: Have `To`: %s want:%s", res.To.Format("2006-01-02"), tc.ExpectRes.To.Format("2006-01-02"))
 			}
 
 			if res.All != tc.ExpectRes.All {
-				t.Fatalf("Have `All`: %t want:%t", res.All, tc.ExpectRes.All)
+				t.Fatalf("processInput: Have `All`: %t want:%t", res.All, tc.ExpectRes.All)
 			}
 		})
 	}

@@ -67,7 +67,7 @@ func TestCalcContributions(t *testing.T) {
 		{
 			Name:         "No Range",
 			GHContrStats: testContributorStats,
-			Options:      app.CalcContrbutionsOpts{},
+			Options:      app.CalcContrbutionsOpts{}, // from and to take Time zero value
 			ExpectRes: app.Contributor{
 				Name: "Luke-Davies",
 				Stats: app.Stats{
@@ -112,7 +112,7 @@ func TestCalcContributions(t *testing.T) {
 		t.Run(tc.Name, func(t *testing.T) {
 			res := app.CalcContributions(tc.GHContrStats, tc.Options)
 			if !reflect.DeepEqual(res, tc.ExpectRes) {
-				t.Errorf("github.ListContributorStats:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, tc.ExpectRes)
+				t.Errorf("CalcContributions:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, tc.ExpectRes)
 			}
 		})
 	}
@@ -170,7 +170,7 @@ func TestValidateCalcContributionsOpts(t *testing.T) {
 	earlierDate, err := time.Parse("2006-01-02", "2018-06-16")
 	laterDate, err := time.Parse("2006-01-02", "2018-06-17")
 	if err != nil {
-		t.Errorf("TestNormaliseCalcContributionsOpts: Problem parsing a date")
+		t.Errorf("TestValidateCalcContributionsOpts: Problem parsing a date")
 	}
 	ts := []struct {
 		Name        string
@@ -222,10 +222,10 @@ func TestValidateCalcContributionsOpts(t *testing.T) {
 		t.Run(tc.Name, func(t *testing.T) {
 			err := app.ValidateCalcContributionsOpts(tc.Input)
 			if err == nil && tc.ShouldError {
-				t.Fatal("Should error but didn't")
+				t.Fatal("ValidateCalcContributionsOpts: Should error but didn't")
 			}
 			if err != nil && !tc.ShouldError {
-				t.Fatal("Should not error but did")
+				t.Fatal("ValidateCalcContributionsOpts: Should not error but did")
 			}
 		})
 	}
@@ -272,6 +272,6 @@ func TestFilterContributors(t *testing.T) {
 	want := input[:3]
 
 	if !reflect.DeepEqual(res, want) {
-		t.Errorf("github.FilterContributors:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, want)
+		t.Errorf("FilterContributors:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, want)
 	}
 }

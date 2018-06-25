@@ -147,7 +147,7 @@ func TestListContributorStats(t *testing.T) {
 			mockHandler := func(w http.ResponseWriter, r *http.Request) {
 				wantURL := fmt.Sprintf("/repos/%s/%s/stats/contributors", tc.RepoOwner, tc.RepoName)
 				if r.RequestURI != wantURL {
-					t.Errorf("github.ListContributorStats:\n\nhave request url:\n%+v\n\nwant request url:\n%+v", r.RequestURI, wantURL)
+					t.Errorf("ListContributorStats:\n\nhave request url:\n%+v\n\nwant request url:\n%+v", r.RequestURI, wantURL)
 				}
 				w.WriteHeader(tc.RespHeader)
 				fmt.Fprint(w, tc.RespBody)
@@ -158,21 +158,21 @@ func TestListContributorStats(t *testing.T) {
 			client := github.Client{BaseURL: mockServer.URL}
 			res, err := client.ListContributorStats(context.Background(), tc.RepoOwner, tc.RepoName)
 			if err != nil && tc.ExpectError == nil {
-				t.Errorf("Unexpected Error: %v", err)
+				t.Errorf("ListContributorStats: Unexpected Error: %v", err)
 			}
 
 			if tc.ExpectError != nil {
 				if err == nil {
-					t.Fatal("Expected error but received nil")
+					t.Fatal("ListContributorStats: Expected error but received nil")
 				}
 				if !strings.HasPrefix(err.Error(), tc.ExpectError.Error()) {
-					t.Errorf("github.ListContributorStats:\n\nhave error:\n%+v\n\nwant error that starts with:\n%+v", err.Error(), tc.ExpectError.Error())
+					t.Errorf("ListContributorStats:\n\nhave error:\n%+v\n\nwant error that starts with:\n%+v", err.Error(), tc.ExpectError.Error())
 				}
 			}
 
 			if tc.ExpectRes != nil {
 				if !reflect.DeepEqual(res, tc.ExpectRes) {
-					t.Errorf("github.ListContributorStats:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, tc.ExpectRes)
+					t.Errorf("ListContributorStats:\n\nhave result:\n%+v\n\nwant result:\n%+v", res, tc.ExpectRes)
 				}
 			}
 		})
