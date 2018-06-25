@@ -47,7 +47,7 @@ type CalcContrbutionsOpts struct {
 //
 // Options include `from` and `to` which form a date range. Passing these options results in
 // data only being calculated for the given range.
-// The available GitHub data is grouped by week-beginning where the first day of the week is sunday,
+// The available GitHub data is grouped by week-beginning with the first day of the week being sunday,
 // therefore the range can only be applied against week beginning.
 // i.e stats with week-beginnings between the date range are included.
 // This means that a date range of a monday to saturday (6 days) will result in no data.

@@ -65,6 +65,7 @@ func main() {
 
 }
 
+// simplifies parseInput signature
 type rawInputs struct {
 	Repo   string
 	From   string
@@ -131,6 +132,7 @@ func parseInput() (rawInputs, error) {
 	}, nil
 }
 
+// simplifies processInput signature
 type processedInputs struct {
 	Owner string
 	Repo  string
@@ -162,14 +164,14 @@ func processInput(p rawInputs) (processedInputs, error) {
 	}
 
 	if p.To != "" {
-		var err error // so `to` on next line` refers to var in parent scope
+		var err error // so that `to` on next line` refers to var in parent scope
 		to, err = time.Parse("2006-01-02", p.To)
 		if err != nil {
 			return processedInputs{}, errors.New("[processInput] invalid `to` value provided. Format: YYYY-MM-DD")
 		}
 	}
 
-	// already check flag combination by this point so no need to worry
+	// already check flag combination by this point so no need to worry about from or to
 	if p.Weeks != 0 || p.Months != 0 || p.Years != 0 {
 		from = time.Now().AddDate(-p.Years, -p.Months, -(p.Weeks * 7))
 	}
