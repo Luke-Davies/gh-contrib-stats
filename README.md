@@ -6,6 +6,20 @@ Fetches contributor stats for a given date range.
 
 **NB:** The GitHub API returns contributor stats grouped by week beginning. This should be considered when passing a date range.
 
+## Requires go1.10 or later
+
+If you see:
+```
+go get -u github.com/luke-davies/gh-contrib-stats
+# github.com/luke-davies/gh-contrib-stats
+go/src/github.com/luke-davies/gh-contrib-stats/main.go:95:20: flag.CommandLine.Output undefined (type *flag.FlagSet has no field or method Output, but does have flag.output)
+```
+it is because you are on an old version of go.
+```
+go version
+```
+Upgrade to go1.10 or later.
+
 
 ## Install
 `go get github.com/luke-davies/gh-contrib-stats`
