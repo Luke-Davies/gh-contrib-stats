@@ -99,9 +99,9 @@ func parseInput() (rawInputs, error) {
 				"beginning of the week is not within the date range.\n"+
 				"Contributors with 0 commits in the given date range are filtered out.\n\n"+
 				"Examples:\n"+
-				"\t%[1]s go/golang\n"+
-				"\t%[1]s --from 2017-09-01 --to 2018-02-01 go/golang\n"+
-				"\t%[1]s --weeks 10 go/golang\n\n"+
+				"\t%[1]s golang/go\n"+
+				"\t%[1]s --from 2017-09-01 --to 2018-02-01 golang/go\n"+
+				"\t%[1]s --weeks 10 golang/go\n\n"+
 				"Options for date range:\n\n",
 			os.Args[0],
 		)
